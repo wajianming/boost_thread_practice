@@ -1,0 +1,37 @@
+#the first look, contains a summary about the content and a reference to the file INSTALL
+
+Starting from the top level directory of the package, the sequence of steps is as
+follows:
+autoscan (optional) Generates configure.scan, a proposal for configure.ac derived
+from the source code
+aclocal Places M4 macro definitions needed by autoconf into a single file. The
+aclocal command first scans for macro definitions in *.m4 files in its default
+directory (/usr/share/aclocal on some systems) and in the file acinclude.m4. It
+next scans for macros used in the configure.ac file. It generates an aclocal.m4
+file that contains definitions of all M4 macros required by autoconf and a
+directory autom4te.cache.
+edit configure.ac Adjust the generated proposal configure.scan or write the file
+from scratch
+autoconf Generates the configure script
+autoheader (optional) Generates the template file config.h.in
+create Makefile.in Either by hand from the static Makefile or edit Makefile.am and
+run automake -a The parameter “a” adds missing files and scripts.
+
+
+Except autoscan, these steps are repeated after every change of the input files.
+In order to “automate” the reconfiguration they are compressed into one powerful
+command:
+autoreconf -vfi.
+It rebuilds configure and templates. The parameters are as follows:
+v verbose, to get information about the reconfiguration process
+f force, to replace existing files
+i install, to copy missing files into the package
+
+
+
+If software projects are under version control, such as CVS or Subversion, there
+are no files in the repository, which could be generated automatically. Thus there
+are only the input files (configure.ac Makefile.am). In order to organize the calls of
+the autotools there is a script typically named autogen.sh. Unfortunaly this name
+is similar to the name of an existing software tool for automatic text generation
+“autogen”. There is no relation between autogen and autogen.sh.
